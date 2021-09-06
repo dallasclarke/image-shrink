@@ -25,7 +25,7 @@ function createMainWindow() {
 }
 
 function createAboutWindow() {
-  mainWindow = new BrowserWindow({
+  aboutWindow = new BrowserWindow({
     title: "About Image Shrink",
     width: 300,
     height: 300,
