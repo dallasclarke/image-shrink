@@ -36,9 +36,9 @@
           <em>The lower the quality, the smaller the file size</em>
         </p>
         <p class="range-field">
-          <input type="range" min="0" max="100" id="slider">
+          <input type="range" min="0" max="100" id="slider" />
         </p>
-        <input type="submit" value="Resize" class="btn black">
+        <input type="submit" value="Resize" class="btn black" />
       </form>
       <div class="card output">
         <div class="card-content">
@@ -46,7 +46,32 @@
         </div>
       </div>
     </div>
-
     <script src="js/materialize.min.js"></script>
+    <script>
+      const path = require("path");
+      const os = require("os");
+      const { ipcRenderer } = require("electron");
+
+      const form = document.getElementById("image-form");
+      const slider = document.getElementById("slider");
+      const img = document.getElementById("img");
+
+      document.getElementById("output-path").innerText = path.join(
+        os.homedir(),
+        "imageshrink"
+      );
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const imgPath = img.files[0].path;
+        const quality = slider.value;
+
+        ipcRenderer.send("image:minimize", {
+          imgPath,
+          quality,
+        });
+      });
+    </script>
   </body>
 </html>

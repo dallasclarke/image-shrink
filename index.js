@@ -1,4 +1,12 @@
-const { app, BrowserWindow, Menu } = require("electron");
+const path = require("path");
+const os = require("os");
+
+const { app, BrowserWindow, Menu, ipcMain, shell } = require("electron");
+
+const imagemin = require("imagemin");
+const imageminMozjpeg = require("imagemin-mozjpeg");
+const imageminPngquant = require("imagemin-pngquant");
+const slash = require("slash");
 
 process.env.NODE_ENV = "development";
 
@@ -18,8 +26,14 @@ function createMainWindow() {
     backgroundColor: "#fff",
     webPreferences: {
       nativeWindowOpen: true,
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   });
+
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
+  }
 
   mainWindow.loadFile("./app/index.html");
 }
@@ -93,8 +107,33 @@ const menu = [
     : []),
 ];
 
-if (isMac) {
-  menu.unshift({ role: "appMenu" });
+// if (isMac) {
+//   menu.unshift({ role: "appMenu" });
+// }
+
+ipcMain.on("image:minimize", (e, options) => {
+  options.dest = path.join(os.homedir(), "imageshrink");
+  shrinkImage(options);
+});
+
+async function shrinkImage({ imgPath, quality, dest }) {
+  try {
+    const pngQuality = quality / 100;
+
+    const files = await imagemin([slash(imgPath)], {
+      destination: dest,
+      plugins: [
+        imageminMozjpeg({ quality }),
+        imageminPngquant({
+          quality: [pngQuality, pngQuality],
+        }),
+      ],
+    });
+
+    shell.openPath(dest)
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 app.on("window-all-closed", () => {
