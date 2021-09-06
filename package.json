@@ -1,16 +1,21 @@
 {
   "name": "image-shrink",
+  "productName": "Image Shrink",
   "version": "1.0.0",
   "description": "App to shrink image size.",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
-    "dev": "nodemon --exec electron ."
+    "dev": "nodemon --exec electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . --overwrite --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=false --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Image Shrink\"",
+    "package-linux": "electron-packager . --overwrite --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=false --out=release-builds"
   },
   "author": "Dallas Clarke",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^14.0.0"
+    "electron": "^14.0.0",
+    "electron-packager": "^15.3.0"
   },
   "dependencies": {
     "electron-log": "^4.4.1",
