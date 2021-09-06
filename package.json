@@ -4,7 +4,8 @@
   "description": "App to shrink image size.",
   "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dev": "nodemon --exec electron ."
   },
   "author": "Dallas Clarke",
   "license": "ISC",
